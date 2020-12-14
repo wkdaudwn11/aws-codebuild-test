@@ -1,0 +1,15 @@
+Parameters:
+  ProjectSource:
+    Type: String
+    Default: "https://github.com/wkdaudwn11/aws-codebuild-test"
+    Description: "Source control URL (e.g. Github)"
+  GithubOwner:
+    Type: String
+    Default: wkdaudwn11
+  GithubRepo:
+    Type: String
+    Default: aws-codebuild-test
+    Description: "aws-codebuild-test"
+  GithubOAuthToken:
+    Type: String
+    Description: "a13edb5c6968a7411973609667ba7b503bd31a85"

@@ -1,36 +1,41 @@
 version: 0.2
-
 phases:
-  install: # 사전에 설치 할 항목
+  install:
     runtime-versions:
-      nodejs: 10 # 노드 버전은 정해져있는 거 같음. 8, 10
-  pre_build: # Build 전에 할 작업
+      nodejs: 8
+  pre_build:
     commands:
       - echo Installing source NPM dependencies...
+      - npx webpack
       - npm install
-  build: # Build
+  build:
     commands:
       - echo Build started on `date`
-      - npx webpack
       - npm run build
-  post_build: # Build 완료 후에 할 작업
+  post_build:
     commands:
       # copy the contents of /build to S3
-      - aws s3 cp --recursive --acl public-read ./build s3://aws-codebuild-test-s3/build/
+      - aws s3 cp --recursive --acl public-read ./build s3://mj-cloudfront-test-s3/
 
       # set the cache-control headers for service-worker.js to prevent
       # browser caching
       # - >
       #   aws s3 cp --acl public-read
       #   --cache-control="max-age=0, no-cache, no-store, must-revalidate"
-      #   ./build/service-worker.js s3://aws-codebuild-test-s3/
+      #   ./build/service-worker.js s3://mj-cloudfront-test-s3/
 
       # set the cache-control headers for index.html to prevent
       # browser caching
       - >
         aws s3 cp --acl public-read 
         --cache-control="max-age=0, no-cache, no-store, must-revalidate" 
-        ./build/index.html s3://aws-codebuild-test-s3/build
+        ./build/index.html s3://mj-cloudfront-test-s3/
+
+      # invalidate the CloudFront cache for index.html and service-worker.js
+      # to force CloudFront to update its edge locations with the new versions
+      # - >
+      #   aws cloudfront create-invalidation --distribution-id ${Distribution}
+      #   --paths /index.html /service-worker.js
 artifacts:
   files:
     - "**/*"
