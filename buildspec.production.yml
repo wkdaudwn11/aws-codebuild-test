@@ -1,5 +1,12 @@
 version: 0.1
+env:
+  variables:
+    S3_BUCKET: "aws-codebuild-test-s3"
+    BUILD_ENV: "prod"
 phases:
+  install:
+    runtime-versions:
+      nodejs: 12.8.0
   pre_build:
     commands:
       - echo Installing source NPM dependencies...
@@ -11,7 +18,11 @@ phases:
   post_build:
     commands:
       # copy the contents of /dist to S3
-      - aws s3 cp --recursive --acl public-read ./dist s3://aws-codebuild-test-s3/build/
+      # - aws s3 cp --recursive --acl public-read ./dist s3://aws-codebuild-test-s3
+      - aws s3 rm s3://aws-codebuild-test-s3 --recursive
+      - echo S3 bucket is cleared.
+      - aws s3 cp dist/aws-codebuild-test-s3 s3://aws-codebuild-test-s3 --recursive
+      - echo Build completed on `date`
 
       # set the cache-control headers for service-worker.js to prevent
       # browser caching
@@ -25,7 +36,7 @@ phases:
       - >
         aws s3 cp --acl public-read 
         --cache-control="max-age=0, no-cache, no-store, must-revalidate" 
-        ./build/index.html s3://aws-codebuild-test-s3/
+        ./dist/index.html s3://aws-codebuild-test-s3/
 artifacts:
   files:
     - "**/*"
