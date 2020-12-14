@@ -1,8 +1,10 @@
-const childProcess = require("child_process");
+// const childProcess = require("child_process");
 
 module.exports = function banner() {
-  const commit = childProcess.execSync("git rev-parse --short HEAD");
-  const user = childProcess.execSync("git config user.name");
+  // const commit = childProcess.execSync("git rev-parse --short HEAD");
+  // const user = childProcess.execSync("git config user.name");
+  const commit = "Commit";
+  const user = "user";
   const date = new Date().toLocaleString();
 
   return (
