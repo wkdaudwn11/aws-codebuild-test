@@ -14,7 +14,7 @@ module.exports = {
     // 웹팩의 결과물에 대한 정보를 입력하는 속성
     filename: "[name].bundle.js",
     chunkFilename: "[name].bundle.js",
-    path: path.resolve(__dirname, "dist"), // 결과물 경로
+    path: path.resolve(__dirname, "build"), // 결과물 경로
     publicPath: "/", // HTML등 다른 파일에서 생성된 번들을 참조할 때, /을 기준으로 참조.
   },
   resolve: {
